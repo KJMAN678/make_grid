@@ -44,4 +44,8 @@ bokeh serve --show button_mapf.py
 
 # ボタンを押すとSVGのアニメーションを表示する
 bokeh serve --show button_animation.py
+
+# ボタンを押すと MAPF を実行して SVG を表示する
+# ->Gridは画面で編集する
+bokeh serve --show app.py
 ```

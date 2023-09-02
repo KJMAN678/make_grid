@@ -17,7 +17,7 @@ def update_div():
 button = Button(label="Load SVG", button_type="success")
 button.on_click(update_div)
 
-div = Div(text="", width=800, height=600)
+div = Div(text="", width=10, height=60)
 
 layout = column(button, div)
 curdoc().add_root(layout)

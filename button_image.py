@@ -30,7 +30,7 @@ def load_and_display():
 source = ColumnDataSource(data=dict(image=[]))
 
 # プロットを作成
-p = figure(x_range=(0, 10), y_range=(0, 10), width=300, height=300, match_aspect=True)
+p = figure(x_range=(0, 10), y_range=(0, 10), width=600, height=600, match_aspect=True)
 p.image_rgba(image="image", x=0, y=0, dw="dw", dh="dh", source=source)
 
 # ボタンを作成
