@@ -24,16 +24,6 @@ pip-compile requirements.in
 ```
 
 ```sh
-streamlit run app.py
-
-http://localhost:8501/
-```
-
-```sh
-python app.py
-```
-
-```sh
 # グリッドのクリックした場所を #(壁)として認識し、gridの文字列を作成
 bokeh serve --show bokeh_make_grid_by_click.py
 
