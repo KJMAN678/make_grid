@@ -8,14 +8,14 @@ INIT_SIZE = 10
 size = INIT_SIZE
 cell_size = 20  # 各セルのサイズ
 
-source = ColumnDataSource(data=dict(x=[], y=[], colors=[], texts=[]))
+# source = ColumnDataSource(data=dict(x=[], y=[], colors=[], texts=[]))
 
-# プロットを作成
-p = figure(width=size * cell_size, height=size * cell_size, tools="tap", title="Adjustable and Clickable Grid")
-p.rect("x", "y", 1, 1, color="colors", source=source)
-p.text("x", "y", text="texts", text_align="center", text_baseline="middle", source=source)
-p.grid.visible = False
-p.axis.visible = False
+# # プロットを作成
+# p = figure(width=size * cell_size, height=size * cell_size, tools="tap", title="Adjustable and Clickable Grid")
+# p.rect("x", "y", 1, 1, color="colors", source=source)
+# p.text("x", "y", text="texts", text_align="center", text_baseline="middle", source=source)
+# p.grid.visible = False
+# p.axis.visible = False
 
 
 # グリッドを更新する関数
@@ -49,9 +49,6 @@ def callback(attr, old, new):
         print()
 
 
-source.selected.on_change("indices", callback)
-
-
 # ボタンのコールバック
 def button_callback():
     global size
@@ -59,7 +56,19 @@ def button_callback():
     update_grid()
 
 
+source = ColumnDataSource(data=dict(x=[], y=[], colors=[], texts=[]))
+
+# プロットを作成
+p = figure(width=size * cell_size, height=size * cell_size, tools="tap", title="Adjustable and Clickable Grid")
+p.rect("x", "y", 1, 1, color="colors", source=source)
+p.text("x", "y", text="texts", text_align="center", text_baseline="middle", source=source)
+p.grid.visible = False
+p.axis.visible = False
+
+source.selected.on_change("indices", callback)
+
 slider = Slider(start=5, end=100, value=INIT_SIZE, step=1, title="Grid Size")
+
 button = Button(label="Update Grid", button_type="success")
 button.on_click(button_callback)
 
