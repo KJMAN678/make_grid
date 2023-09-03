@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 from bokeh.layouts import column, row
 from bokeh.models import Button, ColumnDataSource, Slider
@@ -7,17 +9,18 @@ from bokeh.plotting import curdoc, figure
 from pogema import GridConfig, pogema_v0
 from pogema.animation import AnimationMonitor
 
-SVG_FILE_PATH = "mapf_button.svg"
+SVG_FILE_PATH = "mapf.svg"
 INIT_SIZE = 10
 size = INIT_SIZE
 cell_size = 20  # 各セルのサイズ
+output_grid_list = []
 
 #####################
 
 
 # クリックイベントのコールバック
 def grid_click_callback(attr, old, new):
-    global output_grid
+    global output_grid_str, output_grid_list
     inds = new
     if inds:
         index = inds[0]
@@ -28,24 +31,39 @@ def grid_click_callback(attr, old, new):
         source.data["texts"][index] = new_text
         source.data = dict(source.data)
 
-        output_grid = np.array(source.data["texts"]).reshape(size, size).tolist()
-        output_grid.reverse()
-        output_grid = "\n".join(["".join(row) for row in output_grid])
+        output_grid_list = np.array(source.data["texts"]).reshape(size, size).tolist()
+        output_grid_list.reverse()
+        output_grid_str = "\n".join(["".join(row) for row in output_grid_list])
 
 
 def running_mapf_and_display_svg(file_path=SVG_FILE_PATH, num_agents=2):
-    global output_grid, display_svg_div
+    global display_svg_div, output_grid_list
 
-    agents_xy = np.random.randint(2, 4, (num_agents, 2)).tolist()
-    targets_xy = np.random.randint(2, 4, (num_agents, 2)).tolist()
+    output_grid_list = np.array(output_grid_list)
+    np.where(output_grid_list == ".")
+
+    blank_coordinate_list = []
+
+    # INIT_SIZE - 3 を上限としないとエラーがでる？
+    for i, j in zip(np.where(output_grid_list == ".")[0], np.where(output_grid_list == ".")[1]):
+        if i >= 2 and j >= 2 and i <= INIT_SIZE - 3 and j <= INIT_SIZE - 3:
+            blank_coordinate_list.append([i, j])
+
+    agents_xy = []
+    targets_xy = []
+    for _ in range(num_agents):
+        index_agents = random.randint(0, len(blank_coordinate_list) - 1)
+        index_targets = random.randint(0, len(blank_coordinate_list) - 1)
+        agents_xy.append(blank_coordinate_list[index_agents])
+        targets_xy.append(blank_coordinate_list[index_targets])
 
     grid_config = GridConfig(
         num_agents=num_agents,
         density=0.4,
         seed=1,
-        max_episode_steps=128,
+        max_episode_steps=512,
         obs_radius=3,
-        map=output_grid,
+        map=output_grid_str,
         agents_xy=agents_xy,
         targets_xy=targets_xy,
     )
