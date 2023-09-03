@@ -1,5 +1,5 @@
 import numpy as np
-from bokeh.layouts import column
+from bokeh.layouts import column, row
 from bokeh.models import Button, ColumnDataSource, Slider
 from bokeh.models.widgets import Div
 from bokeh.plotting import curdoc, figure
@@ -33,8 +33,8 @@ def grid_click_callback(attr, old, new):
         output_grid = "\n".join(["".join(row) for row in output_grid])
 
 
-def running_mapf_and_save_svg(file_path=SVG_FILE_PATH, num_agents=2):
-    global output_grid
+def running_mapf_and_display_svg(file_path=SVG_FILE_PATH, num_agents=2):
+    global output_grid, display_svg_div
 
     agents_xy = np.random.randint(2, 4, (num_agents, 2)).tolist()
     targets_xy = np.random.randint(2, 4, (num_agents, 2)).tolist()
@@ -65,22 +65,18 @@ def running_mapf_and_save_svg(file_path=SVG_FILE_PATH, num_agents=2):
 
     env.save_animation(file_path)
 
+    # MAPF のSVGを表示する
+    svg_content = load_svg(SVG_FILE_PATH)
+    display_svg_div.text = svg_content
+
 
 def load_svg(svg_path):
     with open(svg_path, "r") as f:
         return f.read()
 
 
-# MAPF のSVGを表示する
-def load_mapf_svg_div():
-    global display_svg_div
-
-    svg_content = load_svg(SVG_FILE_PATH)
-    display_svg_div.text = svg_content
-
-
 # グリッドの作成
-slider = Slider(start=5, end=100, value=INIT_SIZE, step=1, title="グリッドのサイズ")
+slider = Slider(start=5, end=30, value=INIT_SIZE, step=1, title="グリッドのサイズ")
 
 # 初期のグリッドサイズ
 source = ColumnDataSource(data=dict(x=[], y=[], colors=[], texts=[]))
@@ -115,21 +111,17 @@ def button_update_grid_size_callback():
 source.selected.on_change("indices", grid_click_callback)
 
 # グリッドの確定
-button_make_grid = Button(label="グリッドの確定", button_type="success")
+button_make_grid = Button(label="グリッドのサイズ変更", button_type="success")
 button_make_grid.on_click(button_update_grid_size_callback)
 
 update_grid_gui()
 
-# MAPFの実行
+# MAPFの実行および表示
 button_running_mapf = Button(label="MAPFの実行", button_type="success")
-button_running_mapf.on_click(running_mapf_and_save_svg)
-
-# MAPFの表示
-button_load_mapf_svg = Button(label="MAPFの表示", button_type="success")
-button_load_mapf_svg.on_click(load_mapf_svg_div)
+button_running_mapf.on_click(running_mapf_and_display_svg)
 
 display_svg_div = Div(text="", width=100, height=100)
 
 # layout = column(slider, grip_plot, button_make_grid, button_running_mapf, button_load_mapf_svg, display_svg_div)
-layout = column(slider, button_make_grid, grid_plot, button_running_mapf, button_load_mapf_svg, display_svg_div)
+layout = row(column(slider, button_make_grid, grid_plot, button_running_mapf), column(display_svg_div))
 curdoc().add_root(layout)
