@@ -39,6 +39,8 @@ def grid_click_callback(attr, old, new):
 def running_mapf_and_display_svg(file_path=SVG_FILE_PATH, num_agents=2):
     global display_svg_div, output_grid_list
 
+    num_agents = slider_agent_num.value
+
     output_grid_list = np.array(output_grid_list)
     np.where(output_grid_list == ".")
 
@@ -46,7 +48,12 @@ def running_mapf_and_display_svg(file_path=SVG_FILE_PATH, num_agents=2):
 
     # INIT_SIZE - 3 を上限としないとエラーがでる？
     for i, j in zip(np.where(output_grid_list == ".")[0], np.where(output_grid_list == ".")[1]):
-        if i >= 2 and j >= 2 and i <= INIT_SIZE - 3 and j <= INIT_SIZE - 3:
+        if (
+            i >= int(size * 0.3)
+            and j >= int(size * 0.3)
+            and i <= size - int(size * 0.4)
+            and j <= size - int(size * 0.4)
+        ):
             blank_coordinate_list.append([i, j])
 
     agents_xy = []
@@ -56,6 +63,8 @@ def running_mapf_and_display_svg(file_path=SVG_FILE_PATH, num_agents=2):
         index_targets = random.randint(0, len(blank_coordinate_list) - 1)
         agents_xy.append(blank_coordinate_list[index_agents])
         targets_xy.append(blank_coordinate_list[index_targets])
+
+    print(agents_xy, targets_xy)
 
     grid_config = GridConfig(
         num_agents=num_agents,
@@ -94,7 +103,9 @@ def load_svg(svg_path):
 
 
 # グリッドの作成
-slider = Slider(start=5, end=30, value=INIT_SIZE, step=1, title="グリッドのサイズ")
+
+slider_grid_size = Slider(start=10, end=30, value=size, step=1, title="グリッドのサイズ")
+slider_agent_num = Slider(start=2, end=10, value=2, step=1, title="エージェントの数")
 
 # 初期のグリッドサイズ
 source = ColumnDataSource(data=dict(x=[], y=[], colors=[], texts=[]))
@@ -122,7 +133,7 @@ def update_grid_gui():
 # ボタンのコールバック
 def button_update_grid_size_callback():
     global size
-    size = slider.value
+    size = slider_grid_size.value
     update_grid_gui()
 
 
@@ -140,6 +151,8 @@ button_running_mapf.on_click(running_mapf_and_display_svg)
 
 display_svg_div = Div(text="", width=100, height=100)
 
-# layout = column(slider, grip_plot, button_make_grid, button_running_mapf, button_load_mapf_svg, display_svg_div)
-layout = row(column(slider, button_make_grid, grid_plot, button_running_mapf), column(display_svg_div))
+layout = row(
+    column(slider_grid_size, slider_agent_num, button_make_grid, grid_plot, button_running_mapf),
+    column(display_svg_div),
+)
 curdoc().add_root(layout)
