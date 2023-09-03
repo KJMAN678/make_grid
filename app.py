@@ -73,8 +73,10 @@ def load_svg(svg_path):
 
 # MAPF のSVGを表示する
 def load_mapf_svg_div():
+    global display_svg_div
+
     svg_content = load_svg(SVG_FILE_PATH)
-    div.text = svg_content
+    display_svg_div.text = svg_content
 
 
 # グリッドの作成
@@ -126,8 +128,8 @@ button_running_mapf.on_click(running_mapf_and_save_svg)
 button_load_mapf_svg = Button(label="MAPFの表示", button_type="success")
 button_load_mapf_svg.on_click(load_mapf_svg_div)
 
-Div(text="", width=100, height=100)
+display_svg_div = Div(text="", width=100, height=100)
 
 # layout = column(slider, grip_plot, button_make_grid, button_running_mapf, button_load_mapf_svg, display_svg_div)
-layout = column(slider, button_make_grid, grid_plot, button_running_mapf)
+layout = column(slider, button_make_grid, grid_plot, button_running_mapf, button_load_mapf_svg, display_svg_div)
 curdoc().add_root(layout)
