@@ -32,7 +32,7 @@ packaging==23.1
     # via bokeh
 pandas==2.1.0
     # via bokeh
-pillow==10.0.1
+pillow==10.2.0
     # via bokeh
 pogema==1.0.3
     # via -r requirements.in
