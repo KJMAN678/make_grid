@@ -36,7 +36,7 @@ pillow==10.3.0
     # via bokeh
 pogema==1.0.3
     # via -r requirements.in
-pydantic==2.3.0
+pydantic~> 2.4.0
     # via pogema
 pydantic-core==2.6.3
     # via pydantic
