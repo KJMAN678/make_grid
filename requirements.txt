@@ -48,7 +48,7 @@ pyyaml==6.0.1
     # via bokeh
 six==1.16.0
     # via python-dateutil
-tornado==6.3.3
+tornado~> 6.4.1
     # via bokeh
 typing-extensions==4.7.1
     # via
