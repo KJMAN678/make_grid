@@ -7,7 +7,7 @@ from bokeh.models.widgets import Div
 from bokeh.plotting import curdoc, figure
 
 from pogema import GridConfig, pogema_v0
-from pogema.animation import AnimationMonitor
+from pogema.svg_animation.animation_wrapper import AnimationMonitor
 
 SVG_FILE_PATH = "mapf.svg"
 INIT_SIZE = 10
@@ -47,7 +47,9 @@ def running_mapf_and_display_svg(file_path=SVG_FILE_PATH, num_agents=2):
     blank_coordinate_list = []
 
     # INIT_SIZE - 3 を上限としないとエラーがでる？
-    for i, j in zip(np.where(output_grid_list == ".")[0], np.where(output_grid_list == ".")[1]):
+    for i, j in zip(
+        np.where(output_grid_list == ".")[0], np.where(output_grid_list == ".")[1]
+    ):
         if (
             i >= int(size * 0.3)
             and j >= int(size * 0.3)
@@ -104,16 +106,25 @@ def load_svg(svg_path):
 
 # グリッドの作成
 
-slider_grid_size = Slider(start=10, end=30, value=size, step=1, title="グリッドのサイズ")
+slider_grid_size = Slider(
+    start=10, end=30, value=size, step=1, title="グリッドのサイズ"
+)
 slider_agent_num = Slider(start=2, end=10, value=2, step=1, title="エージェントの数")
 
 # 初期のグリッドサイズ
 source = ColumnDataSource(data=dict(x=[], y=[], colors=[], texts=[]))
 
 # プロットを作成
-grid_plot = figure(width=size * cell_size, height=size * cell_size, tools="tap", title="Adjustable and Clickable Grid")
+grid_plot = figure(
+    width=size * cell_size,
+    height=size * cell_size,
+    tools="tap",
+    title="Adjustable and Clickable Grid",
+)
 grid_plot.rect("x", "y", 1, 1, color="colors", source=source)
-grid_plot.text("x", "y", text="texts", text_align="center", text_baseline="middle", source=source)
+grid_plot.text(
+    "x", "y", text="texts", text_align="center", text_baseline="middle", source=source
+)
 grid_plot.grid.visible = False
 grid_plot.axis.visible = False
 
@@ -152,7 +163,13 @@ button_running_mapf.on_click(running_mapf_and_display_svg)
 display_svg_div = Div(text="", width=100, height=100)
 
 layout = row(
-    column(slider_grid_size, slider_agent_num, button_make_grid, grid_plot, button_running_mapf),
+    column(
+        slider_grid_size,
+        slider_agent_num,
+        button_make_grid,
+        grid_plot,
+        button_running_mapf,
+    ),
     column(display_svg_div),
 )
 curdoc().add_root(layout)

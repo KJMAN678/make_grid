@@ -4,7 +4,7 @@ from bokeh.models import Button
 from bokeh.plotting import curdoc
 
 from pogema import GridConfig, pogema_v0
-from pogema.animation import AnimationMonitor
+from pogema.svg_animation.animation_wrapper import AnimationMonitor
 
 
 def mapf(file_path="mapf_button.svg", num_agents=2):
