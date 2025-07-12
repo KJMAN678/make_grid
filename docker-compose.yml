@@ -1,0 +1,6 @@
+services:
+  pogema:
+    build: .
+    ports:
+      - "5006:5006"
+    command: uv run -- bokeh serve /app/app.py --port 5006 --allow-websocket-origin=localhost:5006
