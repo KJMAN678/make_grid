@@ -1,0 +1,8 @@
+services:
+  backend:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "5006:5006"
+    command: uv run bokeh serve --show /app/app.py

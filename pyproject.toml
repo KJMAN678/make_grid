@@ -1,9 +1,20 @@
 [project]
-name = "django-in-production-07"
+name = "make-grid"
 version = "0.1.0"
-description = "django-in-production 7章"
+description = "make grid"
 readme = "README.md"
-requires-python = "<=3.12"
+requires-python = ">=3.11"
+dependencies = [
+    "setuptools==80.8.0",
+    "bokeh==3.7.3",
+    "numpy==1.23.5",
+    "pogema==1.3.1",
+    "pillow==11.3.0",
+]
 
 [tool.uv]
 link-mode = "copy"
+dev-dependencies = [
+    "ruff==0.12.3",
+    "pytest==8.4.1",
+]
